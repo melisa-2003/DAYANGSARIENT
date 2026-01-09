@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products Inventory</title>
+  <link rel="icon" type="image/x-icon" href="../asset/favicon.ico">
+  <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+
+<div class="admin-container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="../asset/DAYANGSARI ENT Transparent.png" alt="DAYANGSARI ENT Logo" class="logo-img">
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="admin.html">Dashboard</a></li>
+      <li><a href="admin-products.html" class="active">Products</a></li>
+      <li><a href="admin-orders.html">Orders</a></li>
+      <li><a href="admin-customers.html">Customers</a></li>
+      <li><a href="admin-analytics.html">Analytics</a></li>
+      <li><a href="admin-account.html">My Account</a></li>
+      <li class="logout-item"><a href="#logout" id="logout-btn">Log Out</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <section id="products">
+      <div class="page-header">
+        <h1>Products Management</h1>
+        <button class="btn-primary" id="add-product-btn">+ Add New Product</button>
+      </div>
+
+      <!-- Search and Filter -->
+      <div class="filter-bar">
+        <input type="text" id="search-products" placeholder="Search products..." class="search-input">
+        <select id="filter-category" class="filter-select">
+          <option value="">All Categories</option>
+          <option value="cookies">Traditional Biscuits</option>
+          <option value="snacks">Snacks & Crackers</option>
+          <option value="cakes">Layered Cakes</option>
+        </select>
+        <select id="filter-stock" class="filter-select">
+          <option value="">All Stock Status</option>
+          <option value="in-stock">In Stock</option>
+          <option value="low-stock">Low Stock</option>
+          <option value="out-of-stock">Out of Stock</option>
+        </select>
+      </div>
+
+      <!-- Products Table -->
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Price (RM)</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="products-table-body">
+          <tr>
+            <td colspan="9" style="text-align: center; padding: 2rem; color: #999;">
+              Loading products...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Product Stats -->
+      <div class="cards-grid" style="margin-top: 2rem;">
+        <div class="card">
+          <h3>Total Products</h3>
+          <p id="stats-total">0</p>
+          <span class="card-subtitle">In database</span>
+        </div>
+        <div class="card">
+          <h3>In Stock</h3>
+          <p id="stats-in-stock">0</p>
+          <span class="card-subtitle">Available products</span>
+        </div>
+        <div class="card">
+          <h3>Low Stock</h3>
+          <p id="stats-low-stock">0</p>
+          <span class="card-subtitle">Need restock</span>
+        </div>
+        <div class="card">
+          <h3>Out of Stock</h3>
+          <p id="stats-out-stock">0</p>
+          <span class="card-subtitle">Unavailable</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script type="module">
+  // Import Firebase App (核心，必须先加载)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+
+  // Import Firestore 需要用到的函数（根据你的需求添加）
+  import { 
+    getFirestore, 
+    collection, 
+    getDocs, 
+    addDoc, 
+    query, 
+    where, 
+    orderBy, 
+    serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+  // 你的 Firebase 配置（这个是公开的，没问题）
+  const firebaseConfig = {
+    apiKey: "AIzaSyCuBoMGAH4ojkL7XrRPqTbcxCk-3Hmo42c",
+    authDomain: "dayangsari-7fe0d.firebaseapp.com",
+    projectId: "dayangsari-7fe0d",
+    storageBucket: "dayangsari-7fe0d.firebasestorage.app",
+    messagingSenderId: "525763987372",
+    appId: "1:525763987372:web:52128c2f9c8c16f98c9c09"
+  };
+
+  // 初始化 Firebase
+  const app = initializeApp(firebaseConfig);
+
+  // 初始化 Firestore
+  const db = getFirestore(app);
+
+  // 把 db 和集合引用暴露给你的 script.js 使用（很重要！）
+  window.db = db;
+  window.productsCollection = collection(db, "products");
+  window.ordersCollection = collection(db, "orders");
+  window.getDocs = getDocs;
+  window.addDoc = addDoc;
+  window.serverTimestamp = serverTimestamp;
+  window.query = query;
+  window.where = where;
+  window.orderBy = orderBy;     // 订单集合  
+
+  console.log("Firebase 初始化成功！可以开始使用 Firestore 了");
+</script>
+
+
+<script type="module" src="admin.js"></script>
+<script type="module" src="../script.js"></script>
+
+</body>
+</html>

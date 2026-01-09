@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics</title>
+  <link rel="icon" type="image/x-icon" href="../asset/favicon.ico">
+
+  <link rel="stylesheet" href="admin-style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="admin-container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="../asset/DAYANGSARI ENT Transparent.png" alt="DAYANGSARI ENT Logo" class="logo-img">
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="admin.html">Dashboard</a></li>
+      <li><a href="admin-products.html">Products</a></li>
+      <li><a href="admin-orders.html">Orders</a></li>
+      <li><a href="admin-customers.html">Customers</a></li>
+      <li><a href="admin-analytics.html" class="active">Analytics</a></li>
+      <li><a href="admin-account.html">My Account</a></li>
+      <li class="logout-item"><a href="#logout" id="logout-btn">Log Out</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <section id="analytics">
+      <h1>Analytics & Reports</h1>
+
+      <!-- Time Range Selector -->
+      <div class="filter-bar">
+        <select id="time-range" class="filter-select">
+          <option value="7days">Last 7 Days</option>
+          <option value="30days" selected>Last 30 Days</option>
+          <option value="90days">Last 90 Days</option>
+          <option value="1year">Last Year</option>
+          <option value="custom">Custom Range</option>
+        </select>
+        <button class="btn-primary" id="download-report-btn">Download Report</button>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <div class="chart-container">
+          <h2>Sales Revenue</h2>
+          <canvas id="revenueChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+          <h2>Orders Overview</h2>
+          <canvas id="ordersChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+          <h2>Top Products</h2>
+          <canvas id="productsChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+          <h2>Customer Growth</h2>
+          <canvas id="customersChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Performance Metrics -->
+      <div class="metrics-section">
+        <h2>Performance Metrics</h2>
+        <div class="cards-grid">
+          <div class="card">
+            <h3>Avg Order Value</h3>
+            <p>RM 0</p>
+            <span class="card-subtitle">↑ 0% from last month</span>
+          </div>
+          <div class="card">
+            <h3>Conversion Rate</h3>
+            <p>0%</p>
+            <span class="card-subtitle">↑ 0% from last month</span>
+          </div>
+          <div class="card">
+            <h3>Customer Retention</h3>
+            <p>0%</p>
+            <span class="card-subtitle">↑ 0% from last month</span>
+          </div>
+          <div class="card">
+            <h3>Revenue Growth</h3>
+            <p>0%</p>
+            <span class="card-subtitle">↑ 0% from last month</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </main>
+</div>
+
+<script type="module">
+  // Import Firebase App (核心，必须先加载)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+
+  // Import Firestore 需要用到的函数（根据你的需求添加）
+  import { 
+    getFirestore, 
+    collection, 
+    getDocs, 
+    addDoc, 
+    query, 
+    where, 
+    orderBy, 
+    serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+  // 你的 Firebase 配置（这个是公开的，没问题）
+  const firebaseConfig = {
+    apiKey: "AIzaSyCuBoMGAH4ojkL7XrRPqTbcxCk-3Hmo42c",
+    authDomain: "dayangsari-7fe0d.firebaseapp.com",
+    projectId: "dayangsari-7fe0d",
+    storageBucket: "dayangsari-7fe0d.firebasestorage.app",
+    messagingSenderId: "525763987372",
+    appId: "1:525763987372:web:52128c2f9c8c16f98c9c09"
+  };
+
+  // 初始化 Firebase
+  const app = initializeApp(firebaseConfig);
+
+  // 初始化 Firestore
+  const db = getFirestore(app);
+
+  // 把 db 和集合引用暴露给你的 script.js 使用（很重要！）
+  window.db = db;
+  window.productsCollection = collection(db, "products");
+  window.ordersCollection = collection(db, "orders");
+  window.getDocs = getDocs;
+  window.addDoc = addDoc;
+  window.serverTimestamp = serverTimestamp;
+  window.query = query;
+  window.where = where;
+  window.orderBy = orderBy;   
+
+  console.log("Firebase 初始化成功！可以开始使用 Firestore 了");
+</script>
+
+
+<script type="module" src="admin.js"></script>
+<script type="module" src="../script.js"></script>
+
+</body>
+</html>

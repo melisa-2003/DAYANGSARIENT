@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Orders</title>
+  <link rel="icon" type="image/x-icon" href="../asset/favicon.ico">
+  <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+
+<div class="admin-container">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="../asset/DAYANGSARI ENT Transparent.png" alt="DAYANGSARI ENT Logo" class="logo-img">
+    </div>
+    <ul class="sidebar-menu">
+      <li><a href="admin.html">Dashboard</a></li>
+      <li><a href="admin-products.html">Products</a></li>
+      <li><a href="admin-orders.html" class="active">Orders</a></li>
+      <li><a href="admin-customers.html">Customers</a></li>
+      <li><a href="admin-analytics.html">Analytics</a></li>
+      <li><a href="admin-account.html">My Account</a></li>
+      <li class="logout-item"><a href="#logout" id="logout-btn">Log Out</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <section id="orders">
+      <div class="page-header">
+        <h1>Orders Management</h1>
+        <button class="btn-primary" id="export-orders-btn">Export Orders</button>
+      </div>
+
+      <!-- Search and Filter -->
+      <div class="filter-bar">
+        <input type="text" id="search-orders" placeholder="Search by Order ID or Customer..." class="search-input">
+        <select id="filter-status" class="filter-select">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="processing">Processing</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <input type="date" id="filter-date-from" class="filter-select">
+        <input type="date" id="filter-date-to" class="filter-select">
+      </div>
+
+      <!-- Orders Table -->
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Products</th>
+            <th>Total (RM)</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="orders-table-body">
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 2rem; color: #999;">
+              No orders found.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+
+<script type="module">
+  // Import Firebase App (核心，必须先加载)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+
+  // Import Firestore 需要用到的函数（根据你的需求添加）
+  import { 
+    getFirestore, 
+    collection, 
+    getDocs, 
+    addDoc, 
+    query, 
+    where, 
+    orderBy, 
+    serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+  // 你的 Firebase 配置（这个是公开的，没问题）
+  const firebaseConfig = {
+    apiKey: "AIzaSyCuBoMGAH4ojkL7XrRPqTbcxCk-3Hmo42c",
+    authDomain: "dayangsari-7fe0d.firebaseapp.com",
+    projectId: "dayangsari-7fe0d",
+    storageBucket: "dayangsari-7fe0d.firebasestorage.app",
+    messagingSenderId: "525763987372",
+    appId: "1:525763987372:web:52128c2f9c8c16f98c9c09"
+  };
+
+  // 初始化 Firebase
+  const app = initializeApp(firebaseConfig);
+
+  // 初始化 Firestore
+  const db = getFirestore(app);
+
+  // 把 db 和集合引用暴露给你的 script.js 使用（很重要！）
+  window.db = db;
+  window.productsCollection = collection(db, "products");
+  window.ordersCollection = collection(db, "orders");
+  window.getDocs = getDocs;
+  window.addDoc = addDoc;
+  window.serverTimestamp = serverTimestamp;
+  window.query = query;
+  window.where = where;
+  window.orderBy = orderBy;        // 订单集合
+
+  console.log("Firebase 初始化成功！可以开始使用 Firestore 了");
+</script>
+
+<script type="module" src="admin.js"></script>
+
+
+</body>
+</html>
