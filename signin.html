@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - DAYANGSARI ENT</title>
+  <link rel="icon" type="image/x-icon" href="asset/favicon.ico">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="page-loader" id="pageLoader">
+      <div class="loader-content">
+          <div class="cake">
+              <div class="plate"></div>
+              <div class="layer layer-bottom"></div>
+              <div class="layer layer-middle"></div>
+              <div class="layer layer-top"></div>
+              <div class="icing"></div>
+              <div class="drip drip1"></div>
+              <div class="drip drip2"></div>
+              <div class="drip drip3"></div>
+              <div class="candle">
+                  <div class="flame"></div>
+              </div>
+          </div>
+          <div class="loading-text">Loading delicious treats...</div>
+      </div>
+  </div>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-container">
+    <a href="index.html" class="logo">DAYANGSARI ENT</a>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="product.html">Products</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="signin.html" class="active">Sign In</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Sign In Section -->
+<div class="signin-wrapper">
+<section class="signin-section">
+  <div class="signin-container">
+    <h2>Sign In</h2>
+    <p>Welcome back! Enter your credentials to access your account</p>
+    
+    <!-- ✅ 关键修改：添加 onsubmit="handleSignIn(event)" -->
+    <form id="signinForm" onsubmit="handleSignIn(event)">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="Enter your email" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-input-wrapper">
+          <input type="password" id="password" placeholder="Enter your password" required>
+          <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password', this)">
+            <img src="asset/eye-open.png" alt="Show password" class="eye-open" onerror="this.parentElement.innerHTML='👁️'">
+            <img src="asset/eye-closed.png" alt="Hide password" class="eye-closed" style="display: none;" onerror="this.style.display='none'">
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Sign In</button>
+    </form>
+
+    <p class="signup-link">
+      Don't have an account? <a href="signup.html">Sign Up</a>
+    </p>
+  </div>
+</section>
+</div>
+
+<div class="scroll-top" id="scrollTop" onclick="scrollToTop()">↑</div>
+
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 DAYANGSARI ENT All rights reserved.</p>
+  <p>Created by: TMT3693 WEB APPLICATION DEVELOPMENT G8</p>
+</footer>
+
+<script type="module">
+  // Import Firebase App (核心，必须先加载)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+
+  // Import Firestore 需要用到的函数（根据你的需求添加）
+  import { 
+    getFirestore, 
+    collection, 
+    getDocs, 
+    addDoc, 
+    query, 
+    where, 
+    orderBy, 
+    serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+  // 你的 Firebase 配置（这个是公开的，没问题）
+  const firebaseConfig = {
+    apiKey: "AIzaSyCuBoMGAH4ojkL7XrRPqTbcxCk-3Hmo42c",
+    authDomain: "dayangsari-7fe0d.firebaseapp.com",
+    projectId: "dayangsari-7fe0d",
+    storageBucket: "dayangsari-7fe0d.firebasestorage.app",
+    messagingSenderId: "525763987372",
+    appId: "1:525763987372:web:52128c2f9c8c16f98c9c09"
+  };
+
+  // 初始化 Firebase
+  const app = initializeApp(firebaseConfig);
+
+  // 初始化 Firestore
+  const db = getFirestore(app);
+
+  // 把 db 和集合引用暴露给你的 script.js 使用（很重要！）
+  window.db = db;
+  window.productsCollection = collection(db, "products");
+  window.ordersCollection = collection(db, "orders");
+  window.getDocs = getDocs;
+  window.addDoc = addDoc;
+  window.serverTimestamp = serverTimestamp;
+  window.query = query;
+  window.where = where;
+  window.orderBy = orderBy;     // 订单集合  
+
+  console.log("Firebase 初始化成功！可以开始使用 Firestore 了");
+</script>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link rel="icon" type="image/x-icon" href="asset/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-content">
+            <div class="cake">
+                <div class="plate"></div>
+                <div class="layer layer-bottom"></div>
+                <div class="layer layer-middle"></div>
+                <div class="layer layer-top"></div>
+                <div class="icing"></div>
+                <div class="drip drip1"></div>
+                <div class="drip drip2"></div>
+                <div class="drip drip3"></div>
+                <div class="candle">
+                    <div class="flame"></div>
+                </div>
+            </div>
+            <div class="loading-text">Loading delicious treats...</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">DAYANGSARI ENT</a>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="product.html">Products</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="signin.html">Sign In</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Product Detail Section -->
+    <div class="product-wrapper">
+    <section class="product-detail-section">
+        <div class="product-detail-container">
+            <!-- Product Image -->
+            <div class="detail-image-wrapper">
+                <div class="detail-product-image" id="productImage">
+                </div>
+            </div>
+
+            <!-- Product Information -->
+            <div class="detail-product-info">
+                <div class="detail-breadcrumb">
+                    <a href="index.html">Home</a> / <a href="product.html">Products</a> / <span id="productName">Product</span>
+                </div>
+                
+                <h1 id="productTitle">Loading product...</h1>
+                
+                <div class="detail-category" id="productCategory">Please wait...</div>
+                                
+                <div class="detail-description" id="productDescription">
+                    <h3>Product Description</h3>
+                    <p>Loading product details...</p>
+                </div>
+
+                <div class="detail-price" id="productPrice">Loading...</div>
+
+                <div class="detail-features">
+                    <h3>Features</h3>
+                    <ul id="productFeatures">
+                        <li>Loading...</li>
+                    </ul>
+                </div>
+
+                <div class="detail-quantity">
+                    <label for="quantity">Quantity:</label>
+                    <div class="quantity-controls">
+                        <button type="button" id="decreaseQty">-</button>
+                        <input type="number" id="quantity" value="1" min="1" max="10">
+                        <button type="button" id="increaseQty">+</button>
+                    </div>
+                </div>
+
+                <div class="detail-actions">
+                    <button class="btn-wishlist" id="wishlistBtn">
+                        <img src="asset/heart-outline.png" alt="Add to wishlist" class="heart-outline" onerror="this.parentElement.innerHTML='🤍'">
+                        <img src="asset/heart-filled.png" alt="Remove from wishlist" class="heart-filled" style="display: none;" onerror="this.style.display='none'">
+                    </button>
+                    <button class="btn btn-primary btn-large" id="addToCartBtn">
+                        Add to Cart
+                    </button>
+                    <button class="btn btn-secondary btn-large" onclick="window.location.href='product.html'">
+                        Back to Products
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+
+    <div class="scroll-top" id="scrollTop" onclick="scrollToTop()">↑</div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 DAYANGSARI ENT All rights reserved.</p>
+        <p>Created by: TMT3693 WEB APPLICATION DEVELOPMENT G8</p>
+    </footer>
+
+    <!-- Chatbot Component (保持不变) -->
+    <button class="chatbot-button" id="chatbotButton" onclick="toggleChatbot()">
+        <span class="chatbot-button-icon">
+            <img src="asset/chatbot.png" alt="Chat" onerror="this.style.display='none'; this.parentElement.innerHTML='💬'">
+        </span>
+        <span class="chatbot-badge" id="chatbotBadge" style="display: none;">1</span>
+    </button>
+
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <div class="chatbot-header-info">
+                <div class="chatbot-avatar">
+                    <img src="asset/cookies.png" alt="Cookie Bot" onerror="this.style.display='none'; this.parentElement.innerHTML='🥮'">
+                </div>
+                <div class="chatbot-title">
+                    <h3>DAYANGSARI Assistant</h3>
+                    <div class="chatbot-status">Online • Ready to help</div>
+                </div>
+            </div>
+            <button class="chatbot-close" onclick="toggleChatbot()">×</button>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages"></div>
+        <div class="chatbot-input-area">
+            <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Type your message..."
+                onkeypress="handleChatbotKeypress(event)">
+            <button class="chatbot-send-btn" onclick="sendChatbotMessage()">➤</button>
+        </div>
+    </div>
+
+    <!-- Firebase 初始化 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs, 
+            addDoc, 
+            query, 
+            where, 
+            orderBy, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCuBoMGAH4ojkL7XrRPqTbcxCk-3Hmo42c",
+            authDomain: "dayangsari-7fe0d.firebaseapp.com",
+            projectId: "dayangsari-7fe0d",
+            storageBucket: "dayangsari-7fe0d.firebasestorage.app",
+            messagingSenderId: "525763987372",
+            appId: "1:525763987372:web:52128c2f9c8c16f98c9c09"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.productsCollection = collection(db, "products");
+        window.ordersCollection = collection(db, "orders");
+        window.getDocs = getDocs;
+        window.addDoc = addDoc;
+        window.serverTimestamp = serverTimestamp;
+        window.query = query;
+        window.where = where;
+        window.orderBy = orderBy;
+
+        console.log("Firebase 初始化成功！可以开始使用 Firestore 了");
+    </script>
+
+    <script type="module" src="script.js"></script>
+
+    <!-- 新增：详情页按钮事件绑定（防止函数未定义错误） -->
+    <script>
+    // 等整个页面和所有脚本（包括 script.js）加载完毕后再绑定按钮事件
+    document.addEventListener('DOMContentLoaded', function () {
+        const addToCartBtn = document.getElementById('addToCartBtn');
+        const wishlistBtn = document.getElementById('wishlistBtn');
+
+        // 绑定加入购物车按钮（调用你 script.js 里已定义的函数）
+        if (addToCartBtn) {
+            addToCartBtn.addEventListener('click', addToCartFromDetail);
+        }
+
+        // 绑定心愿单按钮（如果你原来是用 toggleWishlist）
+        if (wishlistBtn) {
+            wishlistBtn.addEventListener('click', toggleWishlist);
+        }
+
+        // 数量加减按钮也一起改成事件绑定（更稳妥）
+        document.getElementById('increaseQty')?.addEventListener('click', increaseQuantity);
+        document.getElementById('decreaseQty')?.addEventListener('click', decreaseQuantity);
+    });
+</script>
+</body>
+</html>

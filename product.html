@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Our Products</title>
+  <link rel="icon" type="image/x-icon" href="asset/favicon.ico">
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- External CSS-->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div class="page-loader" id="pageLoader">
+    <div class="loader-content">
+        <div class="cake">
+            <div class="plate"></div>
+            <div class="layer layer-bottom"></div>
+            <div class="layer layer-middle"></div>
+            <div class="layer layer-top"></div>
+            <div class="icing"></div>
+            <div class="drip drip1"></div>
+            <div class="drip drip2"></div>
+            <div class="drip drip3"></div>
+            <div class="candle">
+                <div class="flame"></div>
+            </div>
+        </div>
+        <div class="loading-text">Loading delicious treats...</div>
+    </div>
+  </div>
+  
+<!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">DAYANGSARI ENT</a>
+            <button class="menu-toggle" id="menuToggleBtn">☰</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="product.html">Products</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="signin.html">Sign In</a></li>
+            </ul>
+        </div>
+    </nav>
+
+<!-- Page Header -->
+<header class="page-header">
+  <h1>Our Kuih Raya Collection</h1>
+  <p>Choose from our freshly homemade festive treats</p>
+</header>
+
+<section class="product-glass">
+
+<!-- Filter Section -->
+<div class="filter-section">
+  <div class="filter-controls">
+    <div class="search-bar">
+      <span class="search-icon">
+        <img src="asset/search.png" alt="Search" onerror="this.parentElement.innerHTML='🔍'">
+      </span>
+      <input type="text" id="searchInput" placeholder="Search products..." onkeyup="filterProducts()">
+    </div>
+
+    <div class="sort-wrapper">
+      <select class="sort-dropdown" id="sortSelect" onchange="filterProducts()">
+        <option value="default">Sort By</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="name-az">Name: A to Z</option>
+        <option value="name-za">Name: Z to A</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="category-tabs">
+    <button class="category-tab active" data-category="all" id="catAll">All Products</button>
+    <button class="category-tab" data-category="cookies" id="catCookies">Traditional Biscuits</button>
+    <button class="category-tab" data-category="snacks" id="catSnacks">Snacks & Crackers</button>
+    <button class="category-tab" data-category="cakes" id="catCakes">Layered Cakes</button>
+  </div>
+</div>
+
+<!-- Product List -->
+<section class="section">
+  <div class="product-grid" id="productGrid">
+    <!-- Products will be dynamically inserted here -->
+  </div>
+</section>
+
+</section>
+
+<div class="scroll-top" id="scrollTop" onclick="scrollToTop()">↑</div>
+
+<!-- Footer -->
+ <footer>
+  <p>&copy; 2025 DAYANGSARI ENT All rights reserved.</p>
+  <p> Created by: TMT3693 WEB APPLICATION DEVELOPMENT G8</p>
+</footer>
+
+ <!-- ========================================
+     CHATBOT COMPONENT
+     Include this in all your pages using:
+     <div id="chatbot-container"></div>
+     Then load with JavaScript
+     ======================================== -->
+
+     <!-- Chatbot Button -->
+    <button class="chatbot-button" id="chatbotButton">
+        <span class="chatbot-button-icon">
+            <img src="asset/chatbot.png" alt="Chat" onerror="this.style.display='none'; this.parentElement.innerHTML='💬'">
+        </span>
+        <span class="chatbot-badge" id="chatbotBadge" style="display: none;">1</span>
+    </button>
+
+    <!-- Chatbot Window -->
+    <div class="chatbot-window" id="chatbotWindow">
+        <!-- Header -->
+        <div class="chatbot-header">
+            <div class="chatbot-header-info">
+                <div class="chatbot-avatar">
+                    <img src="asset/cookies.png" alt="Cookie Bot" onerror="this.style.display='none'; this.parentElement.innerHTML='🥮'">
+                </div>
+                <div class="chatbot-title">
+                    <h3>DAYANGSARI Assistant</h3>
+                    <div class="chatbot-status">Online • Ready to help</div>
+                </div>
+            </div>
+            <button class="chatbot-close" id="chatbotClose">×</button>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="chatbot-messages" id="chatbotMessages">
+            <!-- Messages will be added here dynamically -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="chatbot-input-area">
+            <input 
+                type="text" 
+                class="chatbot-input" 
+                id="chatbotInput" 
+                placeholder="Type your message..."
+                onkeypress="handleChatbotKeypress(event)"
+            >
+            <button class="chatbot-send-btn" onclick="sendChatbotMessage()">
+                ➤
+            </button>
+        </div>
+    </div>
+
+<!-- JS File -->
+<script type="module">
+  // Import Firebase App (核心，必须先加载)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+
+  // Import Firestore 需要用到的函数（根据你的需求添加）
+  import { 
+    getFirestore, 
+    collection, 
+    getDocs, 
+    addDoc, 
+    query, 
+    where, 
+    orderBy, 
+    serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+  // 你的 Firebase 配置（这个是公开的，没问题）
+  const firebaseConfig = {
+    apiKey: "AIzaSyCuBoMGAH4ojkL7XrRPqTbcxCk-3Hmo42c",
+    authDomain: "dayangsari-7fe0d.firebaseapp.com",
+    projectId: "dayangsari-7fe0d",
+    storageBucket: "dayangsari-7fe0d.firebasestorage.app",
+    messagingSenderId: "525763987372",
+    appId: "1:525763987372:web:52128c2f9c8c16f98c9c09"
+  };
+
+  // 初始化 Firebase
+  const app = initializeApp(firebaseConfig);
+
+  // 初始化 Firestore
+  const db = getFirestore(app);
+
+  // 把 db 和集合引用暴露给你的 script.js 使用（很重要！）
+  window.db = db;
+  window.productsCollection = collection(db, "products");
+  window.ordersCollection = collection(db, "orders");
+  window.getDocs = getDocs;
+  window.addDoc = addDoc;
+  window.serverTimestamp = serverTimestamp;
+  window.query = query;
+  window.where = where;
+  window.orderBy = orderBy;     // 订单集合  
+
+  console.log("Firebase 初始化成功！可以开始使用 Firestore 了");
+</script>
+<script type="module" src="script.js"></script>
+
+</body>
+</html>

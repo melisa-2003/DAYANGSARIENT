@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Wallet Payment - DAYANGSARI ENT</title>
+    <link rel="icon" type="image/x-icon" href="asset/favicon.ico">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="payment-gateway-wrapper">
+    <div class="payment-gateway-container">
+        <!-- Header -->
+        <div class="gateway-header">
+            <div class="gateway-logo">
+                <h2>E-Wallet Payment</h2>
+            </div>
+            <div class="secure-badge">
+                <span>🔒 Secure Payment</span>
+            </div>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="payment-details-box">
+            <h3>Scan QR Code to Pay</h3>
+            <div class="amount-display">
+                <span class="amount-label">Amount to Pay:</span>
+                <span class="amount-value" id="paymentAmount">RM 0.00</span>
+            </div>
+        </div>
+
+        <!-- QR Code Section -->
+        <div class="qr-code-section">
+            <div class="qr-code-box">
+                <!-- QR Code - Changed from canvas to div -->
+                <div class="qr-code" id="qrCanvas">
+                    <!-- QR code image will be inserted here -->
+                </div>
+                <p class="qr-instruction">Select an e-wallet below and scan the QR code</p>
+            </div>
+
+            <!-- Wallet Options -->
+            <div class="wallet-options">
+                <p><strong>Select Your E-Wallet:</strong></p>
+                <div class="wallet-icons">
+                    <div class="wallet-icon" title="Touch 'n Go">
+                        <img src="asset/wallets/tng.png" alt="TNG" onerror="this.parentElement.innerHTML='TNG'">
+                    </div>
+                    <div class="wallet-icon" title="GrabPay">
+                        <img src="asset/wallets/grabpay.png" alt="GrabPay" onerror="this.parentElement.innerHTML='Grab'">
+                    </div>
+                    <div class="wallet-icon" title="DuitNow QR">
+                        <img src="asset/wallets/duitnow.png" alt="DuitNow" onerror="this.parentElement.innerHTML='DuitNow'">
+                    </div>
+                    <div class="wallet-icon" title="ShopeePay">
+                        <img src="asset/wallets/shopeepay.png" alt="ShopeePay" onerror="this.parentElement.innerHTML='Shopee'">
+                    </div>
+                    <div class="wallet-icon" title="SarawakPay">
+                        <img src="asset/wallets/sarawakpay.webp" alt="SarawakPay" onerror="this.parentElement.innerHTML='Spay'">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Timer -->
+            <div class="payment-timer">
+                <p>Time remaining: <span id="timer">05:00</span></p>
+                <div class="timer-progress">
+                    <div class="timer-bar" id="timerBar"></div>
+                </div>
+            </div>
+
+            <!-- Payment Status -->
+            <div class="payment-status" id="paymentStatus">
+                <div class="status-icon">⏳</div>
+                <p>Waiting for payment...</p>
+                <small>Please select an e-wallet and scan the QR code</small>
+            </div>
+        </div>
+
+        <!-- Simulate Payment Button (for demo) -->
+        <div class="demo-actions">
+            <p style="color: #000000; font-size: 0.9rem; margin-bottom: 1rem;">
+                Demo Mode: Click below to simulate successful payment
+            </p>
+            <button class="btn-simulate-success" onclick="simulatePaymentSuccess()">
+                ✓ Simulate Successful Payment
+            </button>
+            <button class="btn-simulate-fail" onclick="simulatePaymentFailure()">
+                ✗ Simulate Failed Payment
+            </button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="gateway-actions">
+            <button class="btn-cancel" onclick="cancelPayment()">Cancel Payment</button>
+        </div>
+    </div>
+    </div>
+
+    <!-- Don't need QR Code library anymore since we're using images -->
+     <script type="module">
+        // Import Firebase App (核心，必须先加载)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+
+        // Import Firestore 需要用到的函数（根据你的需求添加）
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs, 
+            addDoc, 
+            query, 
+            where, 
+            orderBy, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+        // 你的 Firebase 配置（这个是公开的，没问题）
+        const firebaseConfig = {
+            apiKey: "AIzaSyCuBoMGAH4ojkL7XrRPqTbcxCk-3Hmo42c",
+            authDomain: "dayangsari-7fe0d.firebaseapp.com",
+            projectId: "dayangsari-7fe0d",
+            storageBucket: "dayangsari-7fe0d.firebasestorage.app",
+            messagingSenderId: "525763987372",
+            appId: "1:525763987372:web:52128c2f9c8c16f98c9c09"
+        };
+
+        // 初始化 Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // 初始化 Firestore
+        const db = getFirestore(app);
+
+        // 把 db 和集合引用暴露给你的 script.js 使用（很重要！）
+        window.db = db;
+        window.productsCollection = collection(db, "products");
+        window.ordersCollection = collection(db, "orders");
+        window.getDocs = getDocs;
+        window.addDoc = addDoc;
+        window.serverTimestamp = serverTimestamp;
+        window.query = query;
+        window.where = where;
+        window.orderBy = orderBy;     // 订单集合  
+
+        console.log("Firebase 初始化成功！可以开始使用 Firestore 了");
+    </script>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
